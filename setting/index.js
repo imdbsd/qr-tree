@@ -1,42 +1,20 @@
 import { gettext } from "i18n";
+import { ZWSP } from "../helpers/zwsp";
 
 AppSettingsPage({
   // 1. Define state
   props: { test: "as" },
   state: {
-    testValue: null,
-    clicked: false,
+    showModal: false,
+    inputLink: "",
+    inputLinkType: null,
     props: {},
   },
   build(props) {
     console.log("props: ", props);
     console.log("state: ", this.state);
-    // 2. Get SettingsStorage
+
     this.getStorage(props);
-
-    // 3. Logic
-    const toggleButtonMap = {
-      ["Hello Zepp OS"]: "Hello World",
-      ["Hello World"]: "Hello Zepp OS",
-    };
-
-    // // 4. Return Render Function
-    // return Button({
-    //   label: this.state.testValue,
-    //   style: {
-    //     fontSize: "12px",
-    //     borderRadius: "30px",
-    //     background: "#D85E33",
-    //     color: "white",
-    //   },
-    //   onClick: () => {
-    //     // 5. Modify the data in settingsStorage in the callback function of the event
-    //     props.settingsStorage.setItem(
-    //       "testValue",
-    //       toggleButtonMap[this.state.testValue]
-    //     );
-    //   },
-    // });
 
     return View(
       {
@@ -48,103 +26,169 @@ AppSettingsPage({
         View(
           {
             style: {
+              display: this.state.showModal ? "flex" : "none",
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              top: 0,
+              left: 0,
+              zIndex: 999,
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          },
+          [
+            View({
+              style: {
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                top: 0,
+                left: 0,
+                backgroundColor: "black",
+                opacity: 0.5,
+              },
+              onClick: () => {
+                props.settingsStorage.setItem("showModal", false);
+              },
+            }),
+            View(
+              {
+                style: {
+                  position: "relative",
+                  backgroundColor: "#ffffff",
+                  padding: "16px",
+                  borderRadius: 8,
+                  width: "90%",
+                },
+              },
+              [
+                Text(
+                  {
+                    style: {
+                      size: "24px",
+                      textAlign: "center",
+                      marginBottom: "16px",
+                    },
+                    bold: true,
+                    paragraph: true,
+                  },
+                  "Insert Link"
+                ),
+                Text(
+                  {
+                    style: {
+                      size: "16px",
+                      marginBottom: "8px",
+                    },
+                    bold: true,
+                    paragraph: true,
+                  },
+                  "Social Media"
+                ),
+                Select({
+                  options: [
+                    { name: "Twitter", value: "twitter" },
+                    { name: "Instagram", value: "instagram" },
+                  ],
+                  onChange: (val) => {
+                    console.log(val);
+                  },
+                }),
+
+                TextInput({
+                  label: "Link",
+                  value: this.state.inputLink ? this.state.inputLink : ZWSP,
+                  placeholder: "Example: https://twitter.com/user",
+                  onChange: (val) => {
+                    console.log("valu: ", val);
+                    props.settingsStorage.setItem("inputLink", val);
+                  },
+                  labelStyle: {
+                    size: "16px",
+                    marginBottom: "8px",
+                    marginTop: "16px",
+                    fontWeight: "bold",
+                  },
+                  subStyle: {
+                    borderBottom: "1px solid #cecece",
+                  },
+                }),
+                View(
+                  {
+                    style: {
+                      marginTop: "16px",
+                      display: "flex",
+                      justifyContent: "end",
+                    },
+                  },
+                  Button({
+                    label: "Save",
+                    style: {
+                      fontSize: "12px",
+                      borderRadius: "30px",
+                      // background: "#AFC8AD",
+                      backgroundColor: "#9CAFAA",
+                      color: "white",
+                    },
+                    onClick: () => {
+                      props.settingsStorage.setItem("showModal", false);
+                    },
+                  })
+                ),
+              ]
+            ),
+          ]
+        ),
+        View(
+          {
+            style: {
               position: "fixed",
               bottom: 0,
               left: 0,
               right: 0,
-              // backgroundColor: "red",
               display: "flex",
-              paddingTop: "20px",
-              justifyContent: "space-between",
-              // height: "40px",
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              justifyContent: "center",
+              backgroundColor: "white",
             },
           },
           [
             View(
               {
                 style: {
-                  backgroundColor: "red",
+                  backgroundColor: "#9CAFAA",
                   cursor: "pointer",
                   borderRadius: "100%",
                   padding: "4px",
+                  display: "flex",
+                  alignItems: "center",
                 },
                 onClick: () => {
-                  // console.log("statenya: ", this.state.clicked);
-                  // this.state.clicked = !this.state.clicked;
-                  // console.log("statenya clicked: ", this.state.clicked);
-                  props.settingsStorage.setItem("clicked", !this.state.clicked);
+                  props.settingsStorage.setItem(
+                    "showModal",
+                    !this.state.showModal
+                  );
                 },
               },
               Image({
-                src: "https://raw.githubusercontent.com/imdbsd/gimbot-snake/master/src/assets/icons/github.png",
+                src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_add.png",
                 width: 64,
                 height: 64,
                 style: {
-                  height: "30px",
-                  width: "auto",
-                },
-              })
-            ),
-            Text(
-              {
-                style: {
-                  marginTop: "5px",
-                  width: "100%",
-                  display: "block",
-                  fontSize: "14px",
-                  color: "#6A707C",
-                },
-              },
-              this.state.clicked ? "clicked" : "not yet"
-              // this.state.clicked
-            ),
-            View(
-              {
-                style: {
-                  backgroundColor: "yellow",
-                  cursor: "pointer",
-                  borderRadius: "100%",
-                  padding: "4px",
-                },
-                onClick: () => {
-                  console.log("clicked");
-                },
-              },
-              Image({
-                src: "https://raw.githubusercontent.com/imdbsd/gimbot-snake/master/src/assets/icons/github.png",
-                width: 64,
-                height: 64,
-                style: {
-                  height: "30px",
+                  height: "32px",
                   width: "auto",
                 },
               })
             ),
           ]
         ),
-        Button({
-          label: this.state.testValue,
-          style: {
-            fontSize: "12px",
-            borderRadius: "30px",
-            background: "#D85E33",
-            color: "white",
-          },
-          onClick: () => {
-            // 5. Modify the data in settingsStorage in the callback function of the event
-            props.settingsStorage.setItem(
-              "testValue",
-              toggleButtonMap[this.state.testValue]
-            );
-            // props.settingsStorage.clear();
-          },
-        }),
       ]
     );
   },
   getStorage(props) {
-    this.state.testValue =
-      props.settingsStorage.getItem("testValue") || "Hello World";
-    this.state.clicked = props.settingsStorage.getItem("clicked") || false;
+    this.state.showModal = props.settingsStorage.getItem("showModal") || false;
+    this.state.inputLink = props.settingsStorage.getItem("inputLink") || "";
   },
 });
