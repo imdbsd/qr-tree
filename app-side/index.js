@@ -1,5 +1,6 @@
 import { gettext } from "i18n";
 import { MessageBuilder } from "../helpers/message-builder/message-side";
+import { CALL_EVENT } from "../helpers/messaging/constants";
 
 const messageBuilder = new MessageBuilder();
 
@@ -7,12 +8,26 @@ AppSideService({
   onInit() {
     console.log(gettext("example"));
 
-    messageBuilder.listen(() => {});
+    messageBuilder.listen(() => {
+      console.log("messageBuilder listen");
+    });
     settings.settingsStorage.addListener(
       "change",
       ({ key, newValue, oldValue }) => {
-        console.log("storage change: ", newValue, oldValue);
-        messageBuilder.call(newValue);
+        console.log("storage change: ", key, newValue, oldValue);
+        let payload;
+
+        switch (key) {
+          case "testValue": {
+            payload = {
+              type: CALL_EVENT.TEST_VALUE_CHANGE,
+              data: newValue,
+            };
+            break;
+          }
+        }
+
+        if (payload) messageBuilder.call(payload);
       }
     );
     messageBuilder.on("request", (ctx) => {
