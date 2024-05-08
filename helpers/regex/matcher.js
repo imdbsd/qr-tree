@@ -3,12 +3,8 @@
  * @returns string
  */
 const sanitizeProtocol = (url) => {
-  if (url.startsWith("https://")) {
-    return url.replace("https://", "");
-  }
-
-  if (url.startsWith("http://")) {
-    return url.replace("http://", "");
+  if (/^(https|http)/.test(url)) {
+    return url.replace("https://", "").replace("http://");
   }
 
   return url;
@@ -20,7 +16,11 @@ const sanitizeProtocol = (url) => {
  */
 export const isTwitterURL = (url) => {
   const clean = sanitizeProtocol(url);
-  return clean.startsWith("www.x.com") || clean.startsWith("www.twitter.com");
+  const hosts = ["www.x.com", "www.twitter.com", "x.com", "twitter.com"];
+
+  return hosts.some((host) => {
+    return clean.startsWith(host);
+  });
 };
 
 /**
@@ -29,6 +29,12 @@ export const isTwitterURL = (url) => {
  */
 export const isYoutubeURL = (url) => {
   const clean = sanitizeProtocol(url);
+  const hosts = [
+    "www.youtube.com",
+    "www.youtube.com",
+    "youtube.com",
+    "youtube.com",
+  ];
   return (
     clean.startsWith("www.youtube.com") || clean.startsWith("www.youtube.com")
   );

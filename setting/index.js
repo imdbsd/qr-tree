@@ -1,6 +1,5 @@
 import { gettext } from "i18n";
 import { PLATFORM_COLOR } from "../uikits/colors/appSettingColors";
-import { ZWSP } from "../helpers/zwsp";
 import {
   isInstagramURL,
   isTwitterURL,
@@ -39,7 +38,48 @@ AppSettingsPage({
                     marginBottom: "16px",
                   },
                 },
-                "card"
+                [
+                  View(
+                    {
+                      style: {
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: "8px",
+                      },
+                    },
+                    [
+                      Image({
+                        src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_add.png",
+                        width: 64,
+                        height: 64,
+                        style: {
+                          height: "16px",
+                          width: "auto",
+                          backgroundColor: "red",
+                        },
+                      }),
+                      Text(
+                        {
+                          bold: true,
+                          style: { marginLeft: "12px" },
+                        },
+                        tree.type
+                      ),
+                    ]
+                  ),
+                  Text(
+                    {
+                      paragraph: true,
+                      style: {
+                        color: "#cecece",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      },
+                    },
+                    tree.link
+                  ),
+                ]
               )
             )
           : "No Data"
@@ -121,7 +161,7 @@ AppSettingsPage({
 
               TextInput({
                 label: "Link",
-                value: this.state.inputLink ? this.state.inputLink : ZWSP,
+                value: this.state.inputLink ? this.state.inputLink : "",
                 placeholder: "Example: https://twitter.com/user",
                 onChange: (val) => {
                   props.settingsStorage.setItem("inputLink", val);
@@ -133,6 +173,7 @@ AppSettingsPage({
                   fontWeight: "bold",
                 },
                 subStyle: {
+                  paddingBottom: this.state.inputLink ? 0 : "16px",
                   borderBottom: "1px solid #cecece",
                 },
               }),
@@ -189,10 +230,7 @@ AppSettingsPage({
                 alignItems: "center",
               },
               onClick: () => {
-                props.settingsStorage.setItem(
-                  "showModal",
-                  !this.state.showModal
-                );
+                props.settingsStorage.setItem("showModal", true);
               },
             },
             Image({
@@ -227,33 +265,40 @@ AppSettingsPage({
   },
 
   save(props) {
-    // let isValid = false;
-    let isValid = true;
+    const inputLink = this.state.inputLink;
+    const inputLinkType = this.state.inputLinkType;
 
-    switch (this.state.inputLinkType) {
-      case "twitter": {
-        isValid = isTwitterURL(this.state.inputLink);
-      }
-      case "instagram": {
-        isValid = isInstagramURL(this.state.inputLink);
-      }
-      case "youtube": {
-        isValid = isYoutubeURL(this.state.inputLink);
-      }
-    }
+    if (inputLink && inputLinkType) {
+      let isValid = false;
 
-    if (isValid) {
-      const links = props.settingsStorage.getItem("linksTree");
-      const newLink = {
-        type: this.state.inputLinkType,
-        link: this.state.inputLink,
-      };
-      props.settingsStorage.setItem(
-        "linksTree",
-        Array.isArray(links) ? [...links, newLink] : [newLink]
-      );
-    } else {
-      console.error("Invalid link");
+      switch (inputLinkType) {
+        case "twitter": {
+          isValid = isTwitterURL(inputLink);
+          break;
+        }
+        case "instagram": {
+          isValid = isInstagramURL(inputLink);
+          break;
+        }
+        case "youtube": {
+          isValid = isYoutubeURL(inputLink);
+          break;
+        }
+      }
+
+      if (isValid) {
+        const links = props.settingsStorage.getItem("linksTree");
+        const newLink = {
+          type: inputLinkType,
+          link: inputLink,
+        };
+        props.settingsStorage.setItem(
+          "linksTree",
+          Array.isArray(links) ? [...links, newLink] : [newLink]
+        );
+      } else {
+        console.error("Invalid link");
+      }
     }
 
     this.closeModal(props);
