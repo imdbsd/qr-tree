@@ -24,6 +24,7 @@ AppSettingsPage({
         {
           style: {
             padding: "20px",
+            overflowX: "hidden",
           },
         },
         this.state.linksTree.length > 0
@@ -33,10 +34,12 @@ AppSettingsPage({
                   style: {
                     display: "flex",
                     width: "100%",
-                    flexWrap: "wrap",
                     alignItems: "center",
-                    justifyContent: "center",
                     marginBottom: "16px",
+                    transition: "all 0.5s ease",
+                    transform: `translateX(${
+                      this.state.showDeleteAction ? "-75px" : "0px"
+                    })`,
                   },
                 },
                 [
@@ -49,7 +52,7 @@ AppSettingsPage({
                         borderWidth: "2px",
                         borderColor: PLATFORM_COLOR[tree.type],
                         borderStyle: "solid",
-                        width: this.state.showDeleteAction ? "75%" : "100%",
+                        width: "100%",
                       },
                     },
                     [
@@ -62,20 +65,9 @@ AppSettingsPage({
                           },
                         },
                         [
-                          Image({
-                            src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_add.png",
-                            width: 64,
-                            height: 64,
-                            style: {
-                              height: "16px",
-                              width: "auto",
-                              backgroundColor: "red",
-                            },
-                          }),
                           Text(
                             {
                               bold: true,
-                              style: { marginLeft: "12px" },
                             },
                             tree.type
                           ),
@@ -95,43 +87,67 @@ AppSettingsPage({
                       ),
                     ]
                   ),
-                  ...(this.state.showDeleteAction
-                    ? [
-                        View(
-                          {
-                            style: {
-                              display: "flex",
-                              flex: "1",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            },
-                          },
-                          View(
-                            {
-                              style: {
-                                display: "flex",
-                                backgroundColor: "red",
-                                padding: "12px",
-                                borderRadius: 8,
-                              },
-                            },
-                            Image({
-                              src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_add.png",
-                              width: 64,
-                              height: 64,
-                              style: {
-                                height: "16px",
-                                width: "auto",
-                              },
-                            })
-                          )
-                        ),
-                      ]
-                    : []),
+                  View(
+                    {
+                      style: {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        opacity: this.state.showDeleteAction ? 1 : 0,
+                        transition: "all 0.5s ease",
+                        marginLeft: 20,
+                      },
+                    },
+                    View(
+                      {
+                        style: {
+                          display: "flex",
+                          backgroundColor: "#FA7070",
+                          padding: "12px",
+                          borderRadius: 8,
+                        },
+                      },
+                      Image({
+                        src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_delete-1.png",
+                        width: 64,
+                        height: 64,
+                        style: {
+                          height: "16px",
+                          width: "auto",
+                        },
+                      })
+                    )
+                  ),
                 ]
               )
             )
-          : "No Data"
+          : View(
+              {
+                style: {
+                  display: "flex",
+                  position: "fixed",
+                  width: "100%",
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  top: 0,
+                  left: 0,
+                },
+              },
+              [
+                Text(
+                  {
+                    style: {
+                      size: "24px",
+                      color: "#9CAFAA",
+                    },
+                    bold: true,
+                    paragraph: true,
+                  },
+                  "No Link Data"
+                ),
+              ]
+            )
       ),
       // Modal Start
       View(
@@ -274,7 +290,7 @@ AppSettingsPage({
                 backgroundColor: "#9CAFAA",
                 cursor: "pointer",
                 borderRadius: "100%",
-                padding: "4px",
+                padding: "10px",
                 display: "flex",
                 alignItems: "center",
               },
@@ -287,7 +303,7 @@ AppSettingsPage({
               width: 64,
               height: 64,
               style: {
-                height: "32px",
+                height: "24px",
                 width: "auto",
               },
             })
@@ -296,10 +312,10 @@ AppSettingsPage({
           View(
             {
               style: {
-                backgroundColor: "red",
+                backgroundColor: "#FA7070",
                 cursor: "pointer",
                 borderRadius: "100%",
-                padding: "4px",
+                padding: "10px",
                 display: "flex",
                 alignItems: "center",
               },
@@ -311,11 +327,11 @@ AppSettingsPage({
               },
             },
             Image({
-              src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_add.png",
+              src: "https://raw.githubusercontent.com/imdbsd/qr-tree/master/assets/390x450-amazfit-active/icons/ic_delete-1.png",
               width: 64,
               height: 64,
               style: {
-                height: "32px",
+                height: "24px",
                 width: "auto",
               },
             })
