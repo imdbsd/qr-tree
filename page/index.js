@@ -1,62 +1,44 @@
 import { getText } from "@zos/i18n";
 import { log } from "@zos/utils";
-import { buf2json } from "../helpers/message-builder/data";
 import { MessageBuilder } from "../helpers/message-builder/message";
 import { Text } from "../uikits";
-import * as ble from "@zos/ble";
-import { getPackageInfo } from "@zos/app";
 import { CALL_EVENT } from "../helpers/messaging/constants";
+
+const { messageBuilder } = getApp()._options.globalData;
 
 const logger = log.getLogger("qr-tree");
 
 Page({
-  state: {
-    messageBuilder: null,
-  },
+  state: {},
 
-  onInit() {
-    logger.log("app onCreate invoked");
-    const { appId } = getPackageInfo();
-    logger.log("appId: ", appId);
-    const messageBuilder = new MessageBuilder({
-      appId,
-      appDevicePort: 20,
-      appSidePort: 0,
-      ble,
-    });
-
-    logger.log("messageBuilder: ", messageBuilder);
-
-    this.state.messageBuilder = messageBuilder;
-    messageBuilder.connect();
-
-    logger.log("onCreate messageBUilder: ", this.state.messageBuilder);
-  },
+  onInit() {},
 
   build() {
-    // console.log(getText("example"));
+    const textUi = new Text("QR TREE");
+    const subtitleUi = new Text("QR TREE", { widgetOptions: { y: 100 } });
+    const dataUi = new Text("QR TREE", { widgetOptions: { y: 150 } });
+    messageBuilder
+      .request({
+        method: "INITIAL_DATA",
+      })
+      .then((value) => {
+        logger.log("value: ", value);
+        logger.log("value: ", value.text);
+        dataUi.setText(value.text);
+      });
 
-    const textUi = new Text("Heelo Ga es");
-
-    // logger.log("build messageBUilder: ", this.state.messageBuilder);
-
-    this.state.messageBuilder.on("call", ({ payload: buf }) => {
-      log.debug("message builder payload: ", buf);
-      const { type, data } = buf2json(buf);
-
-      log.debug("message builder callEvent: ", callEvent);
-
-      switch (type) {
-        case CALL_EVENT.TEST_VALUE_CHANGE: {
-          textUi.setText(data);
-          break;
+    messageBuilder.on("call", ({ payload: buf }) => {
+      // call the messageBuilder.buf2Json method to convert the buffer to a JS JSON object
+      const event = messageBuilder.buf2Json(buf);
+      const { method, params } = event;
+      switch (method) {
+        case "UPDATE_TEXT": {
+          subtitleUi.setText(params.text);
         }
       }
+      logger.log("event masuk as", event);
     });
   },
 
-  onDestroy() {
-    logger.log("app onDestroy invoked");
-    this.state.messageBuilder && this.state.messageBuilder.disConnect();
-  },
+  onDestroy() {},
 });
