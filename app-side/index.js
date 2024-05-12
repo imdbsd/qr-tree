@@ -1,6 +1,9 @@
 import { gettext } from "i18n";
 import { MessageBuilder } from "../helpers/message-builder/message-side";
-import { CALL_EVENT } from "../helpers/messaging/constants";
+import {
+  CALL_EVENT_TYPE,
+  REQUEST_EVENT_TYPE,
+} from "../helpers/messaging/constants";
 
 const messageBuilder = new MessageBuilder();
 
@@ -18,12 +21,10 @@ AppSideService({
       const { method, params } = payload;
 
       switch (method) {
-        case "INITIAL_DATA": {
+        case REQUEST_EVENT_TYPE.SYNC_LINKS: {
+          console.log("items: ", settings.settingsStorage.getItem("linksTree"));
           return ctx.response({
-            data: {
-              text: "Hello",
-              data: { success: true },
-            },
+            data: settings.settingsStorage.getItem("linksTree") || [],
           });
         }
       }

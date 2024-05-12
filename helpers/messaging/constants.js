@@ -1,7 +1,5 @@
-export const REQUEST_EVENT = {
-  HELLO: "HELLO",
+export const REQUEST_EVENT_TYPE = {
+  SYNC_LINKS: "sync-links",
 };
 
-export const CALL_EVENT = {
-  TEST_VALUE_CHANGE: "test_value_change",
-};
+export const CALL_EVENT_TYPE = {};
