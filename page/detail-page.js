@@ -18,7 +18,10 @@ Page({
   ui: { subtitleUi: null },
   subtitleUi: null,
 
-  onInit() {
+  onInit(params) {
+    logger.log("passed params: ", params);
+    logger.log("passed params: ", typeof params);
+    logger.log("passed params: ", params.index);
     this.state.links = appStorage.getLinks();
     this.listenHandler();
     setStatusBarVisible(false);
