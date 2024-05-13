@@ -18,6 +18,14 @@ class AppStorage {
     } catch {
       this.links = [];
     }
+    this.links = [
+      {
+        type: "youtube",
+        label: "Tara Art Nikah",
+        url: "https://www.youtube.com/watch?v=fdF0fd40tmY&ab_channel=TaraArtsGameIndonesia",
+        backgroundColor: "#D37676",
+      },
+    ];
     this.lastUpdate = localStorage.getItem(
       AppStorage.STORAGE_KEY.LAST_UPDATE,
       null
@@ -26,6 +34,10 @@ class AppStorage {
 
   getLinks() {
     return this.links;
+  }
+
+  getLinkAt(index) {
+    return this.links[index];
   }
 
   getLastUpdate() {
