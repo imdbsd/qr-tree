@@ -1,25 +1,26 @@
-import { createWidget, widget } from "@zos/ui";
+import { createWidget, event, prop, widget } from "@zos/ui";
 import { push } from "@zos/router";
 Page({
   state: {},
-  onInit() {
-    const img_button = createWidget(widget.BUTTON, {
-      x: (480 - 96) / 2,
-      y: 120,
-      text: "Hello",
-      w: -1,
-      h: -1,
-      click_func: () => {
-        console.log("button click");
-        push({
-          url: "page/detail-page",
-          params: {
-            index: 1,
-          },
-        });
-      },
+  onInit() {},
+  build() {
+    const fill_rect = createWidget(widget.FILL_RECT, {
+      x: 125,
+      y: 125,
+      w: 230,
+      h: 150,
+      radius: 20,
+      color: 0xfc6950,
+    });
+
+    fill_rect.addEventListener(event.CLICK_DOWN, (info) => {
+      push({
+        url: "page/detail-page",
+        params: {
+          index: 0,
+        },
+      });
     });
   },
-  build() {},
   onDestroy() {},
 });
