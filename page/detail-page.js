@@ -1,7 +1,7 @@
-import { createWidget, widget, setStatusBarVisible } from "@zos/ui";
+import { createWidget, widget, setStatusBarVisible, align } from "@zos/ui";
 import { getDeviceInfo } from "@zos/device";
 import { getText } from "@zos/i18n";
-import { log } from "@zos/utils";
+import { log, px } from "@zos/utils";
 import { MessageBuilder } from "../helpers/message-builder/message";
 import { Text } from "../uikits";
 import {
@@ -10,36 +10,44 @@ import {
 } from "../helpers/messaging/constants";
 import { logger } from "../helpers/logger";
 import QrView from "../uikits/QrView";
+import { SCROLL_MODE_SWIPER_HORIZONTAL, setScrollMode } from "@zos/page";
+import safeParseJSON from "../helpers/safeParseJSON";
+import hexToNumberColor from "../helpers/hexToNumberColor";
 
+const device = getDeviceInfo();
 const { messageBuilder, appStorage } = getApp()._options.globalData;
 
 Page({
-  state: { subtitleUi: null, links: [] },
+  state: { link: null },
   ui: { subtitleUi: null },
-  subtitleUi: null,
 
-  onInit() {
-    this.state.links = appStorage.getLinks();
+  onInit(params) {
+    const parsedParams = safeParseJSON(params);
+    const index = parsedParams?.index;
+
+    this.state.link =
+      typeof index === "number" ? appStorage.getLinkAt(index) : null;
     this.listenHandler();
+
     setStatusBarVisible(false);
+    setScrollMode({
+      mode: SCROLL_MODE_SWIPER,
+      options: {
+        height: device.width,
+        count: 2,
+      },
+    });
   },
 
   build() {
-    new QrView("Hello Gaes", {
-      backgroundColor: 0xb5c0d0,
-    });
-
-    new QrView("David Disini", {
-      backgroundColor: 0xfcffe0,
-      y: 450,
-    });
-
-    // new Text("QR TREE", { widgetOptions: { y: 450 } });
-    // if (Array.isArray(this.state.links) && this.state.links.length) {
-    //   this.state.links.forEach((link, index) => {
-    //     new Text(link.link, { widgetOptions: { y: 100 + index * 50 } });
-    //   });
-    // }
+    const { link } = this.state;
+    if (link) {
+      this.ui.qrUi = new QrView(link.url, {
+        backgroundColor: hexToNumberColor(link.backgroundColor),
+      });
+    } else {
+      new Text("Preview Failed");
+    }
   },
 
   listenHandler() {
