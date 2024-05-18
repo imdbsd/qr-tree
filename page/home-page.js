@@ -6,6 +6,7 @@ import {
   widget,
   getImageInfo,
   align,
+  setStatusBarVisible,
 } from "@zos/ui";
 import { push } from "@zos/router";
 import Text from "../uikits/Text";
@@ -24,31 +25,30 @@ Page({
     this.state.links = appStorage.getLinks().map((links) => {
       return { ...links, list_icon: "icons/ic_retreat-small.png" };
     });
+    // setStatusBarVisible(false);
   },
   build() {
     const scrollList = createWidget(widget.SCROLL_LIST, {
       x: 0,
-      y: 70,
-      h: device.height,
+      y: 50,
+      h: device.height - 50,
       w: device.width,
       item_space: 20,
-      item_enable_horizon_drag: true,
-      item_drag_max_distance: -112,
       item_config: [
         {
-          item_bg_radius: 10,
           text_view: [
             {
               action: true,
               ...Text.composeList("label", {
-                size: "Subheadline",
+                size: "Title",
                 color: hexToNumberColor("#ffffff"),
                 textStyle: "ellipsis",
                 widgetOptions: {
+                  x: 30,
                   w:
                     device.width -
                     getImageInfo("icons/ic_retreat-small.png").width -
-                    40,
+                    100,
                 },
               }),
             },
@@ -59,12 +59,12 @@ Page({
                 color: hexToNumberColor("#D2E0FB"),
                 textStyle: "ellipsis",
                 widgetOptions: {
-                  x: 0,
-                  y: Text.getTextSize("Subheadline").h,
+                  x: 30,
+                  y: Text.getTextSize("Title").h,
                   w:
                     device.width -
                     getImageInfo("icons/ic_retreat-small.png").width -
-                    40,
+                    100,
                 },
               }),
             },
@@ -75,8 +75,8 @@ Page({
               x:
                 device.width -
                 getImageInfo("icons/ic_retreat-small.png").width -
-                20,
-              y: Text.getTextSize("Subheadline").text_size,
+                40,
+              y: Text.getTextSize("Title").text_size,
               w: 14,
               h: 24,
               key: "list_icon",
