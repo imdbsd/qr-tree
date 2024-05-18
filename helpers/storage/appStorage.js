@@ -20,10 +20,46 @@ class AppStorage {
     }
     this.links = [
       {
-        type: "youtube",
-        label: "Tara Art Nikah",
-        url: "https://www.youtube.com/watch?v=fdF0fd40tmY&ab_channel=TaraArtsGameIndonesia",
-        backgroundColor: "#D37676",
+        type: "whatsapp",
+        label: "Whatsapp",
+        url: "https://wa.me/6285737499966",
+        backgroundColor: "#00A884",
+      },
+      {
+        type: "trakteer",
+        label: "Link minta duit",
+        url: "https://trakteer.id/imdbsd/tip",
+        backgroundColor: "#c53030",
+      },
+      {
+        type: "steam",
+        label: "Steam",
+        url: "https://steamcommunity.com/profiles/76561198144189948/",
+        backgroundColor: "#9BB8CD",
+      },
+      {
+        type: "twitter",
+        label: "Twitter",
+        url: "https://twitter.com/Budisuryadarma",
+        backgroundColor: "#1d9bf0",
+      },
+      {
+        type: "instagram",
+        label: "Instagram",
+        url: "https://www.instagram.com/imdbsd",
+        backgroundColor: "#78C1F3",
+      },
+      {
+        type: "facebook",
+        label: "FB",
+        url: "https://www.facebook.com/imdbsd/",
+        backgroundColor: "#0866ff",
+      },
+      {
+        type: "github",
+        label: "Github",
+        url: "https://github.com/imdbsd",
+        backgroundColor: "#B5C0D0",
       },
     ];
     this.lastUpdate = localStorage.getItem(
