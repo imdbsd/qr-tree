@@ -1,6 +1,7 @@
 import { createWidget, widget, text_style, align, prop } from "@zos/ui";
-import { log } from "@zos/utils";
+import { log, px } from "@zos/utils";
 import { DEVICE_WIDTH } from "./utils";
+import hexToNumberColor from "../helpers/hexToNumberColor";
 
 class Text {
   instance = null;
@@ -11,8 +12,10 @@ class Text {
    * @param {string | undefined} text
    * @param {{
    *  textAlign: 'left' | 'center' | 'right'
-   *  color: number
+   *  color?: number | string
    *  widgetOptions: Record<string, any>
+   *  size?: 'Caption1'|'Subheadline'|'Body'|'Title'|'Title1' | 'LargeTitle'
+   *  textStyle?: 'wrap' | 'char_wrap' | 'ellipsis'
    * } | undefined} configs
    */
   constructor(text, configs) {
@@ -26,8 +29,10 @@ class Text {
    * @param {string | undefined} text
    * @param {{
    *  textAlign: 'left' | 'center' | 'right'
-   *  color: number
+   *  color?: number | string
    *  widgetOptions: Record<string, any>
+   *  size?: 'Caption1'|'Subheadline'|'Body'|'Title'|'Title1' | 'LargeTitle'
+   *  textStyle?: 'wrap' | 'char_wrap' | 'ellipsis'
    * } | undefined} configs
    * @param {options: HmWearableProgram.DeviceSide.HmUI.HmUIWidgetOptions | undefined} widgetOptions
    * @returns {[type: string, options: Record<string, unknown>]}
@@ -37,17 +42,55 @@ class Text {
       widget.TEXT,
       {
         x: 0,
-        y: 50,
+        y: 0,
         w: DEVICE_WIDTH,
-        h: 46,
-        color: 0xffffff,
-        text_size: 36,
+        color:
+          typeof configs?.color === "string" && configs?.color
+            ? hexToNumberColor(configs.color)
+            : configs?.color || 0xffffff,
+        ...Text.getTextSize(configs?.size || "Body"),
         align_h: Text.getTextAlign(configs?.textAlign),
         align_v: align.TOP,
         text,
+        text_style: Text.getTextStlye(configs?.textStyle),
         ...configs?.widgetOptions,
       },
     ];
+  };
+
+  /**
+   *
+   * @param {string} key
+   * @param {{
+   *  textAlign: 'left' | 'center' | 'right'
+   *  color?: number | string
+   *  widgetOptions: Record<string, any>
+   *  size?: 'Caption1'|'Subheadline'|'Body'|'Title'|'Title1' | 'LargeTitle'
+   *  textStyle?: 'wrap' | 'char_wrap' | 'ellipsis'
+   * } | undefined} configs
+   * @param {options: HmWearableProgram.DeviceSide.HmUI.HmUIWidgetOptions | undefined} widgetOptions
+   * @returns {[type: string, options: Record<string, unknown>]}
+   */
+  static composeList = (key, configs) => {
+    const [, composed] = Text.compose("", configs);
+    return { ...composed, key };
+  };
+
+  /**
+   *
+   * @param {'wrap' | 'char_wrap' | 'ellipsis' | undefined} style
+   */
+  static getTextStlye = (style) => {
+    switch (style) {
+      case "char_wrap":
+        return text_style.CHAR_WRAP;
+      case "wrap":
+        return text_style.WRAP;
+      case "ellipsis":
+        return text_style.ELLIPSIS;
+      default:
+        return text_style.NONE;
+    }
   };
 
   /**
@@ -62,6 +105,34 @@ class Text {
       case "left":
       default:
         return align.LEFT;
+    }
+  };
+
+  /**
+   *
+   * @param {'Caption1'|'Subheadline'|'Body'|'Title'|'Title1' | 'LargeTitle'} variant
+   * @returns
+   */
+  static getTextSize = (variant) => {
+    switch (variant) {
+      case "Caption1": {
+        return { text_size: px(24), h: px(24) + 10 };
+      }
+      case "Subheadline": {
+        return { text_size: px(28), h: px(28) + 10 };
+      }
+      case "Body": {
+        return { text_size: px(32), h: px(32) + 10 };
+      }
+      case "Title": {
+        return { text_size: px(36), h: px(36) + 10 };
+      }
+      case "Title1": {
+        return { text_size: px(40), h: px(40) + 10 };
+      }
+      case "LargeTitle": {
+        return { text_size: px(48), h: px(48) + 10 };
+      }
     }
   };
 
