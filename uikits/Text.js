@@ -116,22 +116,22 @@ class Text {
   static getTextSize = (variant) => {
     switch (variant) {
       case "Caption1": {
-        return { text_size: px(24), h: px(24) + 10 };
+        return { text_size: px(24), h: px(24 + 20) };
       }
       case "Subheadline": {
-        return { text_size: px(28), h: px(28) + 10 };
+        return { text_size: px(28), h: px(28 + 20) };
       }
       case "Body": {
-        return { text_size: px(32), h: px(32) + 10 };
+        return { text_size: px(32), h: px(32 + 20) };
       }
       case "Title": {
-        return { text_size: px(36), h: px(36) + 10 };
+        return { text_size: px(36), h: px(36 + 20) };
       }
       case "Title1": {
-        return { text_size: px(40), h: px(40) + 10 };
+        return { text_size: px(40), h: px(40 + 20) };
       }
       case "LargeTitle": {
-        return { text_size: px(48), h: px(48) + 10 };
+        return { text_size: px(48), h: px(48 + 20) };
       }
     }
   };

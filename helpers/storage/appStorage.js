@@ -28,6 +28,7 @@ class AppStorage {
       {
         type: "trakteer",
         label: "Link minta duit",
+        // pinned: true,
         url: "https://trakteer.id/imdbsd/tip",
         backgroundColor: "#c53030",
       },
@@ -66,6 +67,10 @@ class AppStorage {
       AppStorage.STORAGE_KEY.LAST_UPDATE,
       null
     );
+  }
+
+  getPinned() {
+    return this.links.find((link) => link.pinned);
   }
 
   getLinks() {
