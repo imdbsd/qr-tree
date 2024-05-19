@@ -1,15 +1,24 @@
-import { createWidget, widget, align, text_style, getImageInfo } from "@zos/ui";
+import {
+  createWidget,
+  widget,
+  align,
+  text_style,
+  getImageInfo,
+  event,
+} from "@zos/ui";
 import QrView from "../uikits/QrView";
 import AppStorage from "../helpers/storage/appStorage";
 import hexToNumberColor from "../helpers/hexToNumberColor";
 import { Text } from "../uikits";
 import { getDeviceInfo } from "@zos/device";
+import { push, replace } from "@zos/router";
 
 const device = getDeviceInfo();
 
 SecondaryWidget({
   state: {
     pinned: null,
+    index: -1,
     appStorage: null,
   },
   ui: {
@@ -36,9 +45,10 @@ SecondaryWidget({
 
   syncPinnedLink() {
     if (this.state.appStorage) {
-      const pinned = this.state.appStorage.getPinned();
+      const [pinned, index] = this.state.appStorage.getPinned();
       if (pinned && this.state.pinned !== pinned) {
         this.state.pinned = pinned;
+        this.state.index = index;
         return true;
       }
     }
@@ -53,6 +63,10 @@ SecondaryWidget({
     if (pinned) {
       this.ui.qrUi = new QrView(pinned.url, {
         backgroundColor: hexToNumberColor(pinned.backgroundColor),
+      });
+      this.ui.qrUi.instance.addEventListener(event.CLICK_DOWN, () => {
+        console.log("CLICKED QR");
+        this.navigateToApp();
       });
       this.ui.qrTitle = new Text(pinned.label, {
         size: "Title",
@@ -77,6 +91,17 @@ SecondaryWidget({
         y:
           device.height / 2 - imageInfo.height / 2 - Text.getTextSize("Body").h,
         src: "icons/ic_qrcode.png",
+      });
+    }
+  },
+
+  navigateToApp() {
+    if (this.state.index > -1) {
+      push({
+        url: "page/detail-page",
+        params: {
+          index: this.state.index,
+        },
       });
     }
   },

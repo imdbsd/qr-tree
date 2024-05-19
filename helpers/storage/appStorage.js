@@ -22,13 +22,13 @@ class AppStorage {
       {
         type: "whatsapp",
         label: "Whatsapp",
+        pinned: true,
         url: "https://wa.me/6285737499966",
         backgroundColor: "#00A884",
       },
       {
         type: "trakteer",
         label: "Link minta duit",
-        // pinned: true,
         url: "https://trakteer.id/imdbsd/tip",
         backgroundColor: "#c53030",
       },
@@ -70,7 +70,11 @@ class AppStorage {
   }
 
   getPinned() {
-    return this.links.find((link) => link.pinned);
+    const index = this.links.findIndex((link) => link.pinned);
+    if (index > -1) {
+      return [this.links[index], index];
+    }
+    return [undefined, -1];
   }
 
   getLinks() {
