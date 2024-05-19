@@ -44,7 +44,7 @@
             {              
               "path": "secondary-widget/index",
               "icon": "icon.png",
-              "name": "widget-demo",
+              "name": "QR Tree",
               "runtime": {
                 "type": "js"
               }
