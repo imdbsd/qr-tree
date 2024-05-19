@@ -58,7 +58,7 @@ SecondaryWidget({
         size: "Title",
         textAlign: "center",
         textStyle: "ellipsis",
-        color: hexToNumberColor("#EEEDEB"),
+        color: hexToNumberColor("#ffffff"),
         widgetOptions: {
           y: 30,
         },
@@ -66,7 +66,7 @@ SecondaryWidget({
     } else {
       this.ui.noPinned = new Text("No Pinned QR", {
         textAlign: "center",
-        color: hexToNumberColor("#EEEDEB"),
+        color: hexToNumberColor("#ffffff"),
         widgetOptions: {
           y: device.height / 2,
         },
