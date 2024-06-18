@@ -27,6 +27,12 @@ class AppStorage {
         backgroundColor: "#00A884",
       },
       {
+        type: "qris",
+        label: "Qris Jaje Iluh",
+        url: "00020101021126650013ID.CO.BCA.WWW011893600014000144169302150008850014416930303UMI51440014ID.CO.QRIS.WWW0215ID10211341210320303UMI5204546253033605802ID5909JAJE ILUH6006BADUNG61058036162070703A0163044072",
+        backgroundColor: "#FFC374",
+      },
+      {
         type: "trakteer",
         label: "Link minta duit",
         url: "https://trakteer.id/imdbsd/tip",

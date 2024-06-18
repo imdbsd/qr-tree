@@ -1,4 +1,11 @@
-import { createWidget, widget, text_style, align, prop } from "@zos/ui";
+import {
+  createWidget,
+  widget,
+  text_style,
+  align,
+  prop,
+  getTextLayout,
+} from "@zos/ui";
 import { log, px } from "@zos/utils";
 import { DEVICE_WIDTH } from "./utils";
 import hexToNumberColor from "../helpers/hexToNumberColor";
@@ -38,17 +45,32 @@ class Text {
    * @returns {[type: string, options: Record<string, unknown>]}
    */
   static compose = (text, configs) => {
+    const width = configs?.widgetOptions?.w || DEVICE_WIDTH;
+    const { h: textSizeHeight, text_size } = Text.getTextSize(
+      configs?.size || "Body"
+    );
+
+    const h =
+      configs?.textStyle === "char_wrap" || configs?.textStyle === "wrap"
+        ? getTextLayout(text, {
+            text_size,
+            text_width: width,
+            wrapped: 1,
+          }).height + 10
+        : textSizeHeight;
+
     return [
       widget.TEXT,
       {
         x: 0,
         y: 0,
-        w: DEVICE_WIDTH,
+        w: width,
         color:
           typeof configs?.color === "string" && configs?.color
             ? hexToNumberColor(configs.color)
             : configs?.color || 0xffffff,
-        ...Text.getTextSize(configs?.size || "Body"),
+        h,
+        text_size,
         align_h: Text.getTextAlign(configs?.textAlign),
         align_v: align.TOP,
         text,
