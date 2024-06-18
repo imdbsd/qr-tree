@@ -9,9 +9,11 @@ import {
 AppSettingsPage({
   state: {
     showModal: false,
-    inputLink: "",
+    inputLabel: "",
+    inputBackgroundColor: "#000000",
+    inputContent: "",
     inputLinkType: null,
-    linksTree: [],
+    contentsTree: [],
 
     showDeleteAction: false,
     props: {},
@@ -27,8 +29,8 @@ AppSettingsPage({
             overflowX: "hidden",
           },
         },
-        this.state.linksTree.length > 0
-          ? this.state.linksTree.map((tree) =>
+        this.state.contentsTree.length > 0
+          ? this.state.contentsTree.map((tree, index) =>
               View(
                 {
                   style: {
@@ -50,7 +52,7 @@ AppSettingsPage({
                         padding: "16px",
                         backgroundColor: "white",
                         borderWidth: "2px",
-                        borderColor: PLATFORM_COLOR[tree.type],
+                        borderColor: tree.backgroundColor,
                         borderStyle: "solid",
                         width: "100%",
                       },
@@ -69,7 +71,7 @@ AppSettingsPage({
                             {
                               bold: true,
                             },
-                            tree.type
+                            tree.label
                           ),
                         ]
                       ),
@@ -83,7 +85,7 @@ AppSettingsPage({
                             textOverflow: "ellipsis",
                           },
                         },
-                        tree.link
+                        tree.content
                       ),
                     ]
                   ),
@@ -105,6 +107,13 @@ AppSettingsPage({
                           backgroundColor: "#FA7070",
                           padding: "12px",
                           borderRadius: 8,
+                        },
+                        onClick: () => {
+                          this.deleteContent(props, index);
+                          props.settingsStorage.setItem(
+                            "showDeleteAction",
+                            !this.state.showDeleteAction
+                          );
                         },
                       },
                       Image({
@@ -202,34 +211,12 @@ AppSettingsPage({
                 },
                 "Insert Link"
               ),
-              Text(
-                {
-                  style: {
-                    size: "16px",
-                    marginBottom: "8px",
-                  },
-                  bold: true,
-                  paragraph: true,
-                },
-                "Social Media"
-              ),
-              Select({
-                options: [
-                  { name: "Youtube", value: "youtube" },
-                  { name: "Twitter", value: "twitter" },
-                  { name: "Instagram", value: "instagram" },
-                ],
-                onChange: (val) => {
-                  props.settingsStorage.setItem("inputLinkType", val);
-                },
-              }),
 
               TextInput({
-                label: "Link",
-                value: this.state.inputLink ? this.state.inputLink : "",
-                placeholder: "Example: https://twitter.com/user",
+                label: "Label",
+                value: this.state.inputLabel ? this.state.inputLabel : "",
                 onChange: (val) => {
-                  props.settingsStorage.setItem("inputLink", val);
+                  props.settingsStorage.setItem("inputLabel", val);
                 },
                 labelStyle: {
                   size: "16px",
@@ -238,10 +225,51 @@ AppSettingsPage({
                   fontWeight: "bold",
                 },
                 subStyle: {
-                  paddingBottom: this.state.inputLink ? 0 : "16px",
+                  paddingBottom: this.state.inputLabel ? 0 : "16px",
                   borderBottom: "1px solid #cecece",
                 },
               }),
+
+              TextInput({
+                label: "Background Color",
+                value: this.state.inputBackgroundColor
+                  ? this.state.inputBackgroundColor
+                  : "",
+                placeholder: "Default will be #000",
+                onChange: (val) => {
+                  props.settingsStorage.setItem("inputBackgroundColor", val);
+                },
+                labelStyle: {
+                  size: "16px",
+                  marginBottom: "8px",
+                  marginTop: "16px",
+                  fontWeight: "bold",
+                },
+                subStyle: {
+                  paddingBottom: this.state.inputBackgroundColor ? 0 : "16px",
+                  borderBottom: "1px solid #cecece",
+                },
+              }),
+
+              TextInput({
+                label: "Content",
+                value: this.state.inputContent ? this.state.inputContent : "",
+                placeholder: "Example: https://twitter.com/user",
+                onChange: (val) => {
+                  props.settingsStorage.setItem("inputContent", val);
+                },
+                labelStyle: {
+                  size: "16px",
+                  marginBottom: "8px",
+                  marginTop: "16px",
+                  fontWeight: "bold",
+                },
+                subStyle: {
+                  paddingBottom: this.state.inputContent ? 0 : "16px",
+                  borderBottom: "1px solid #cecece",
+                },
+              }),
+
               View(
                 {
                   style: {
@@ -341,12 +369,25 @@ AppSettingsPage({
       // Bottom bar End
     ]);
   },
+
+  deleteContent(props, position) {
+    const newCntents = this.state.contentsTree.filter(
+      (_, index) => index !== position
+    );
+
+    props.settingsStorage.setItem("contentsTree", newCntents);
+  },
   syncStorageAndState(props) {
     this.state.showModal = props.settingsStorage.getItem("showModal") || false;
-    this.state.inputLink = props.settingsStorage.getItem("inputLink") || "";
+    this.state.inputLabel = props.settingsStorage.getItem("inputLabel") || "";
+    this.state.inputBackgroundColor =
+      props.settingsStorage.getItem("inputBackgroundColor") || "";
+    this.state.inputContent =
+      props.settingsStorage.getItem("inputContent") || "";
     this.state.inputLinkType =
       props.settingsStorage.getItem("inputLinkType") || null;
-    this.state.linksTree = props.settingsStorage.getItem("linksTree") || [];
+    this.state.contentsTree =
+      props.settingsStorage.getItem("contentsTree") || [];
     this.state.showDeleteAction =
       props.settingsStorage.getItem("showDeleteAction") || false;
 
@@ -355,45 +396,32 @@ AppSettingsPage({
 
   closeModal(props) {
     props.settingsStorage.setItem("showModal", false);
-    props.settingsStorage.setItem("inputLink", "");
+    props.settingsStorage.setItem("inputLabel", "");
+    props.settingsStorage.setItem("inputBackgroundColor", "#000000");
+    props.settingsStorage.setItem("inputContent", "");
     props.settingsStorage.setItem("inputLinkType", null);
   },
 
   save(props) {
-    const inputLink = this.state.inputLink;
-    const inputLinkType = this.state.inputLinkType;
+    const isHasAllValue =
+      !!this.state.inputLabel &&
+      !!this.state.inputContent &&
+      !!this.state.inputBackgroundColor;
 
-    if (inputLink && inputLinkType) {
-      let isValid = false;
+    if (isHasAllValue) {
+      const contents = props.settingsStorage.getItem("contentsTree");
 
-      switch (inputLinkType) {
-        case "twitter": {
-          isValid = isTwitterURL(inputLink);
-          break;
-        }
-        case "instagram": {
-          isValid = isInstagramURL(inputLink);
-          break;
-        }
-        case "youtube": {
-          isValid = isYoutubeURL(inputLink);
-          break;
-        }
-      }
+      const newContent = {
+        label: this.state.inputLabel,
+        // pinned: true,
+        content: this.state.inputContent,
+        backgroundColor: this.state.inputBackgroundColor,
+      };
 
-      if (isValid) {
-        const links = props.settingsStorage.getItem("linksTree");
-        const newLink = {
-          type: inputLinkType,
-          link: inputLink,
-        };
-        props.settingsStorage.setItem(
-          "linksTree",
-          Array.isArray(links) ? [...links, newLink] : [newLink]
-        );
-      } else {
-        console.error("Invalid link");
-      }
+      props.settingsStorage.setItem(
+        "contentsTree",
+        Array.isArray(contents) ? [...contents, newContent] : [newContent]
+      );
     }
 
     this.closeModal(props);
