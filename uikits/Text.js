@@ -1,4 +1,11 @@
-import { createWidget, widget, text_style, align, prop } from "@zos/ui";
+import {
+  createWidget,
+  widget,
+  text_style,
+  align,
+  prop,
+  getTextLayout,
+} from "@zos/ui";
 import { log, px } from "@zos/utils";
 import { DEVICE_WIDTH } from "./utils";
 import hexToNumberColor from "../helpers/hexToNumberColor";
@@ -38,17 +45,32 @@ class Text {
    * @returns {[type: string, options: Record<string, unknown>]}
    */
   static compose = (text, configs) => {
+    const width = configs?.widgetOptions?.w || DEVICE_WIDTH;
+    const { h: textSizeHeight, text_size } = Text.getTextSize(
+      configs?.size || "Body"
+    );
+
+    const h =
+      configs?.textStyle === "char_wrap" || configs?.textStyle === "wrap"
+        ? getTextLayout(text, {
+            text_size,
+            text_width: width,
+            wrapped: 1,
+          }).height + 10
+        : textSizeHeight;
+
     return [
       widget.TEXT,
       {
         x: 0,
         y: 0,
-        w: DEVICE_WIDTH,
+        w: width,
         color:
           typeof configs?.color === "string" && configs?.color
             ? hexToNumberColor(configs.color)
             : configs?.color || 0xffffff,
-        ...Text.getTextSize(configs?.size || "Body"),
+        h,
+        text_size,
         align_h: Text.getTextAlign(configs?.textAlign),
         align_v: align.TOP,
         text,
@@ -116,22 +138,22 @@ class Text {
   static getTextSize = (variant) => {
     switch (variant) {
       case "Caption1": {
-        return { text_size: px(24), h: px(24) + 10 };
+        return { text_size: px(24), h: px(24 + 20) };
       }
       case "Subheadline": {
-        return { text_size: px(28), h: px(28) + 10 };
+        return { text_size: px(28), h: px(28 + 20) };
       }
       case "Body": {
-        return { text_size: px(32), h: px(32) + 10 };
+        return { text_size: px(32), h: px(32 + 20) };
       }
       case "Title": {
-        return { text_size: px(36), h: px(36) + 10 };
+        return { text_size: px(36), h: px(36 + 20) };
       }
       case "Title1": {
-        return { text_size: px(40), h: px(40) + 10 };
+        return { text_size: px(40), h: px(40 + 20) };
       }
       case "LargeTitle": {
-        return { text_size: px(48), h: px(48) + 10 };
+        return { text_size: px(48), h: px(48 + 20) };
       }
     }
   };

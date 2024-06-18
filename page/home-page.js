@@ -25,7 +25,6 @@ Page({
     this.state.links = appStorage.getLinks().map((links) => {
       return { ...links, list_icon: "icons/ic_retreat-small.png" };
     });
-    // setStatusBarVisible(false);
   },
   build() {
     const scrollList = createWidget(widget.SCROLL_LIST, {
@@ -93,7 +92,6 @@ Page({
       data_array: this.state.links,
       data_count: this.state.links.length,
       item_click_func: (item, index, data_key) => {
-        console.log(`scrollListItemClick index=${index}`);
         push({
           url: "page/detail-page",
           params: {

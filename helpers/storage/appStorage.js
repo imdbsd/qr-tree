@@ -22,8 +22,15 @@ class AppStorage {
       {
         type: "whatsapp",
         label: "Whatsapp",
+        pinned: true,
         url: "https://wa.me/6285737499966",
         backgroundColor: "#00A884",
+      },
+      {
+        type: "qris",
+        label: "Qris Jaje Iluh",
+        url: "00020101021126650013ID.CO.BCA.WWW011893600014000144169302150008850014416930303UMI51440014ID.CO.QRIS.WWW0215ID10211341210320303UMI5204546253033605802ID5909JAJE ILUH6006BADUNG61058036162070703A0163044072",
+        backgroundColor: "#FFC374",
       },
       {
         type: "trakteer",
@@ -66,6 +73,14 @@ class AppStorage {
       AppStorage.STORAGE_KEY.LAST_UPDATE,
       null
     );
+  }
+
+  getPinned() {
+    const index = this.links.findIndex((link) => link.pinned);
+    if (index > -1) {
+      return [this.links[index], index];
+    }
+    return [undefined, -1];
   }
 
   getLinks() {

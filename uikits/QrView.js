@@ -1,5 +1,6 @@
 import { createWidget, widget, deleteWidget } from "@zos/ui";
 import { getDeviceInfo } from "@zos/device";
+import { getDeviceRadius } from "../helpers/getDeviceRadius";
 
 const device = getDeviceInfo();
 
@@ -54,7 +55,7 @@ class QrView {
           y: yPos,
           w: device.width,
           h: device.height,
-          radius: 0,
+          radius: getDeviceRadius(),
           color: configs?.backgroundColor,
           ...configs?.widgetOptions,
         },

@@ -38,7 +38,19 @@
         },
         "setting": {
           "path": "setting/index"
-        }
+        },
+        "secondary-widget": {
+          "widgets": [
+            {              
+              "path": "secondary-widget/index",
+              "icon": "icon.png",
+              "name": "QR Tree",
+              "runtime": {
+                "type": "js"
+              }
+            }
+          ]
+        }      
       },
       "platforms": [
         {
