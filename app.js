@@ -14,7 +14,7 @@ App({
     this.initMessageBuilder();
     this.initAppStorage();
 
-    // this.syncData();
+    this.syncData();
   },
 
   initMessageBuilder() {

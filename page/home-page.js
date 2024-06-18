@@ -13,6 +13,7 @@ import Text from "../uikits/Text";
 import { getDeviceInfo } from "@zos/device";
 import { logger } from "../helpers/logger";
 import hexToNumberColor from "../helpers/hexToNumberColor";
+import { CALL_EVENT_TYPE } from "../helpers/messaging/constants";
 
 const device = getDeviceInfo();
 const { messageBuilder, appStorage } = getApp()._options.globalData;
@@ -24,6 +25,20 @@ Page({
   onInit() {
     this.state.links = appStorage.getLinks().map((links) => {
       return { ...links, list_icon: "icons/ic_retreat-small.png" };
+    });
+
+    messageBuilder.on("call", ({ payload: buf }) => {
+      // call the messageBuilder.buf2Json method to convert the buffer to a JS JSON object
+      const event = messageBuilder.buf2Json(buf);
+      logger.log("event: ", event);
+      const { method, params } = event;
+      // console.log({ method, params });
+      switch (method) {
+        case CALL_EVENT_TYPE.CONTENT_CHANGE: {
+          appStorage.setLinks(params.contents);
+        }
+      }
+      logger.log("event masuk as", event);
     });
   },
   build() {
@@ -53,7 +68,7 @@ Page({
             },
             {
               action: true,
-              ...Text.composeList("url", {
+              ...Text.composeList("content", {
                 size: "Caption1",
                 color: hexToNumberColor("#D2E0FB"),
                 textStyle: "ellipsis",

@@ -46,15 +46,16 @@ Page({
     messageBuilder.on("call", ({ payload: buf }) => {
       // call the messageBuilder.buf2Json method to convert the buffer to a JS JSON object
       const event = messageBuilder.buf2Json(buf);
-      logger.log("event: ", event);
+      // logger.log("event: ", event);
       const { method, params } = event;
+      console.log({ method, params });
       // switch (method) {
       //   case "UPDATE_TEXT": {
       //     // subtitleUi.setText(params.text);
       //     this.ui.subtitleUi.setText(params.text);
       //   }
       // }
-      logger.log("event masuk as", event);
+      // logger.log("event masuk as", event);
     });
   },
 

@@ -12,6 +12,20 @@ AppSideService({
     messageBuilder.listen(() => {
       console.log("App Side is Listening");
     });
+
+    settings.settingsStorage.addListener(
+      "change",
+      async ({ key, newValue, oldValue }) => {
+        console.log("key: ", key);
+        console.log("newValue: ", newValue);
+        if (key === "contentsTree") {
+          messageBuilder.call({
+            method: CALL_EVENT_TYPE.CONTENT_CHANGE,
+            params: { contents: JSON.stringify(newValue) },
+          });
+        }
+      }
+    );
   },
 
   onRun() {
@@ -22,9 +36,12 @@ AppSideService({
 
       switch (method) {
         case REQUEST_EVENT_TYPE.SYNC_LINKS: {
-          console.log("items: ", settings.settingsStorage.getItem("linksTree"));
+          console.log(
+            "items: ",
+            settings.settingsStorage.getItem("contentsTree")
+          );
           return ctx.response({
-            data: settings.settingsStorage.getItem("linksTree") || [],
+            data: settings.settingsStorage.getItem("contentsTree") || [],
           });
         }
       }

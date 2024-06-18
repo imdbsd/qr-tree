@@ -381,7 +381,7 @@ AppSettingsPage({
     this.state.showModal = props.settingsStorage.getItem("showModal") || false;
     this.state.inputLabel = props.settingsStorage.getItem("inputLabel") || "";
     this.state.inputBackgroundColor =
-      props.settingsStorage.getItem("inputBackgroundColor") || "";
+      props.settingsStorage.getItem("inputBackgroundColor") || "000000";
     this.state.inputContent =
       props.settingsStorage.getItem("inputContent") || "";
     this.state.inputLinkType =
